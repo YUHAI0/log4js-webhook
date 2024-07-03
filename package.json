@@ -1,6 +1,6 @@
 {
   "name": "log4js-webhook",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "log4js webhook appender",
   "main": "dist/index.js",
   "scripts": {
