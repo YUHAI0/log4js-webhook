@@ -1,6 +1,5 @@
-# LOG4JS KAFKA APPENDER
-
-Just one of thoese Kafka appenders for log4js, but the most newly
+# LOG4JS KAFKA 
+The only webhook appenders for log4js
 
 ## Install
 
