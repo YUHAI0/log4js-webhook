@@ -2,36 +2,43 @@
  * Log4js webhook appender
  * 
  */
+import { LoggingEvent } from 'log4js';
 import HttpClient from './http-client';
+import dateFormat from 'dateformat';
 
 export interface WebhookMsg {
     level: string,
     message: string,
-    timestamp: any
+    timestamp: string 
 }
 
 export class WebhookContext {
-    format: (msg: WebhookMsg) => string = function(msg) {
+    loggingEvent: LoggingEvent;
+    constructor(loggingEvent: LoggingEvent) {
+        this.loggingEvent = loggingEvent;
+    }
+    format(msg: WebhookMsg) : string {
         var data = `${msg.timestamp} - [${msg.level}] ${msg.message}`
         return data;
+    }
+    formatString() {
+        var e = this.loggingEvent;
+        return this.format({level: e.level.levelStr,message:e.data[0],timestamp:dateFormat(e.startTime, 'isoDateTime')})
     }
 }
 
 export class WebhookConfig {
     method?: string = 'post';
     webhook_url: string;
-    converter: (loggingEvent: any, ctx: WebhookContext) => Object;
-    constructor(webhook_url: string, converter: (loggingEvent: any) => Object) {
+    converter: (ctx: WebhookContext) => Object;
+    constructor(webhook_url: string, converter: (ctx: WebhookContext) => Object) {
         this.webhook_url = webhook_url;
         this.converter = converter;
     }
 }
 
-function defaultLoggingEventConverter(loggingEvent: any, ctx: WebhookContext) {
-    return ctx.format({
-        level: loggingEvent.level.levelStr,
-        message: loggingEvent.data[0],
-        timestamp: loggingEvent.startTime});
+function defaultLoggingEventConverter(ctx: WebhookContext) {
+    return {data: ctx.formatString()};
 }
 
 function appender(config: WebhookConfig) {
@@ -40,7 +47,7 @@ function appender(config: WebhookConfig) {
     const client = new HttpClient(config);
 
     return (loggingEvent: any) => {
-        client.send(converter(loggingEvent, new WebhookContext()));
+        client.send(converter(new WebhookContext(loggingEvent)));
     };
 }
 

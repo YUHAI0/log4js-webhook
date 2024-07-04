@@ -1,18 +1,15 @@
 
 var log4js = require('log4js');
 var path = require('path')
+
 log4js.configure({
     appenders: {
         mycat: {
             type: path.resolve("dist/index.js"),
-            webhook_url: "https://discord.com/api/webhooks/1257983191491412028/_4v4C82TeaONMtmPaHl33C4MZeEN17TT11y_UNBVnCRQyOOPPu3869ZXk5ZRa6AGxZl-",
-            converter: (loggingEvent, ctx) => {
+            webhook_url: "https://hooks.slack.com/services/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", // gitignore
+            converter: (ctx) => {
                 return {
-                    content: ctx.format({
-                        level: loggingEvent.level.levelStr,
-                        message: `${loggingEvent.data[0]}`,
-                        timestamp: loggingEvent.startTime.toLocaleString(),
-                    })
+                    text: ctx.formatString()
                 };
             }
         },

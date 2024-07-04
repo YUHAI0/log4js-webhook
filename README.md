@@ -16,15 +16,12 @@ log4js.configure({
         mycat: {
             type: "log4js-webhook",
             webhook_url: "http://webhook",
-            converter: (loggingEvent, ctx) => {
+            converter: (ctx) => {
                 return {
-                    content: ctx.format({
-                        level: loggingEvent.level.levelStr,
-                        message: `${loggingEvent.data[0]}`,
-                        timestamp: loggingEvent.startTime.toLocaleString(),
-                    })
+                    text: ctx.formatString()
                 };
             }
+
         }
     },
     categories: { default: { appenders: ["mycat"], level: "debug" } },
