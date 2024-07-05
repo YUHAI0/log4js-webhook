@@ -1,4 +1,4 @@
-# LOG4JS KAFKA 
+# LOG4JS Weebhook Appender
 The only webhook appenders for log4js
 
 ## Install
